@@ -1,0 +1,6 @@
+earliest=@day-1days latest=@day index=_internal source="*license_usage.log"
+| rename h as host, b as bytes, st as sourcetype, idx as index
+| eval avgMbPerHost=mbPerDay/host_count
+| stats count AS sample_set, perc95(bytes) AS perc95_size_bytes, avg(bytes) as avg_bytes, sum(bytes) as bytes, dc(host) AS NumHosts BY index, sourcetype
+| eval perc95_size_bytes = round( perc95_size_bytes , 2 ), avg_daily_size_per_host_bytes = round( ( perc95_size_bytes * sample_set ) / NumHosts / 7 , 2)
+| eval mbPerDay=bytes/1024/1024
