@@ -1,0 +1,1 @@
+| metadata index=* type=hosts | eval age = now()-lastTime | where age > 3600 | sort age d | convert ctime(lastTime) | fields age,host,lastTime
